@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "StartPage (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "StartPage (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
