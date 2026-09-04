@@ -32,6 +32,7 @@ public sealed partial class MainWindow : Window
     private OverlappedPresenter? _overlappedPresenter;
     private CancellationTokenSource? _loadCancellationTokenSource;
     private bool _hasLoaded;
+    private readonly StartupSequence _startupSequence;
     private AppBackdropMode _backdropMode = AppBackdropMode.Mica;
 
     public MainViewModel ViewModel { get; } = new();
@@ -40,8 +41,8 @@ public sealed partial class MainWindow : Window
     {
         InitializeComponent();
         LoadWindowSettings();
-        ConfigureWindow();
-        ApplyBackdrop();
+        _startupSequence = new StartupSequence(ConfigureWindow, ApplyBackdrop, UpdateWindowCaptionButtons);
+        _startupSequence.OnConstruct();
 
         if (Content is FrameworkElement root)
         {
@@ -69,8 +70,7 @@ public sealed partial class MainWindow : Window
             UpdateTitleBarDragRegion(root.ActualWidth);
         }
 
-        ApplyBackdrop();
-        UpdateWindowCaptionButtons();
+        _startupSequence.OnLoaded();
         await ReloadAppsAsync();
     }
 
