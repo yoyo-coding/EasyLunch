@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="StartPage">
+    Title="EasyLunch">
 
     <Grid x:Name="Root" Background="Transparent" SizeChanged="Root_SizeChanged">
         <Grid.Resources>
@@ -93,12 +93,12 @@
             <StackPanel x:Name="TitleTextPanel" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="10">
                 <TextBlock
                     x:Name="BrandText"
-                    Text="StartPage"
+                    Text="EasyLunch"
                     FontSize="24"
                     FontWeight="SemiBold"
                     VerticalAlignment="Center" />
                 <TextBlock
-                    Text="启动页"
+                    Text="快捷启动"
                     FontSize="13"
                     Opacity="0.65"
                     VerticalAlignment="Center" />
@@ -184,10 +184,6 @@
                             Width="132"
                             Height="140"
                             Padding="8"
-                            PointerEntered="AppTile_PointerEntered"
-                            PointerExited="AppTile_PointerExited"
-                            PointerPressed="AppTile_PointerPressed"
-                            PointerReleased="AppTile_PointerReleased"
                             RenderTransformOrigin="0.5,0.5"
                             ToolTipService.ToolTip="{Binding Name}">
                             <Grid.RenderTransform>

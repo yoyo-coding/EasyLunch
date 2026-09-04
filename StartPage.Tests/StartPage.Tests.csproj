@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <Compile Include="..\StartPage\StartupSequence.cs" Link="StartupSequence.cs" />
+    <Compile Include="..\StartPage\TileHoverScale.cs" Link="TileHoverScale.cs" />
+    <Compile Include="..\StartPage\BrandingText.cs" Link="BrandingText.cs" />
   </ItemGroup>
 
 </Project>

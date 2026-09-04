@@ -29,7 +29,7 @@ public sealed class AppDiscoveryService
 
     private static readonly string IconCacheDirectory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "StartPage",
+        "EasyLunch",
         "IconCache");
 
     public async Task<IReadOnlyList<AppItem>> GetInstalledAppsAsync(CancellationToken cancellationToken = default)

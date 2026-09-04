@@ -97,7 +97,7 @@ public sealed partial class MainWindow : Window
             _overlappedPresenter = appWindow.Presenter as OverlappedPresenter;
             _appWindow.Changed += AppWindow_Changed;
 
-            appWindow.Title = "StartPage";
+            appWindow.Title = BrandingText.WindowTitle;
             _overlappedPresenter?.SetBorderAndTitleBar(true, false);
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
@@ -371,14 +371,22 @@ public sealed partial class MainWindow : Window
         return false;
     }
 
-    private void AppTile_PointerEntered(object sender, PointerRoutedEventArgs e) => SetTileScale(sender, 1.06);
-    private void AppTile_PointerExited(object sender, PointerRoutedEventArgs e) => SetTileScale(sender, 1.0);
-    private void AppTile_PointerPressed(object sender, PointerRoutedEventArgs e) => SetTileScale(sender, 0.96);
-    private void AppTile_PointerReleased(object sender, PointerRoutedEventArgs e) => SetTileScale(sender, 1.06);
+    private void AppTile_PointerEntered(object sender, PointerRoutedEventArgs e) => SetContainerTileScale(sender, TilePointerState.Entered);
+    private void AppTile_PointerExited(object sender, PointerRoutedEventArgs e) => SetContainerTileScale(sender, TilePointerState.Exited);
+    private void AppTile_PointerPressed(object sender, PointerRoutedEventArgs e) => SetContainerTileScale(sender, TilePointerState.Pressed);
+    private void AppTile_PointerReleased(object sender, PointerRoutedEventArgs e) => SetContainerTileScale(sender, TilePointerState.Entered);
 
-    private static void SetTileScale(object sender, double scale)
+    private static void SetContainerTileScale(object sender, TilePointerState state)
     {
-        if (sender is FrameworkElement { RenderTransform: ScaleTransform transform } element)
+        if (sender is GridViewItem container && container.ContentTemplateRoot is FrameworkElement tile)
+        {
+            SetTileScale(tile, TileHoverScale.GetScale(state));
+        }
+    }
+
+    private static void SetTileScale(FrameworkElement element, double scale)
+    {
+        if (element.RenderTransform is ScaleTransform transform)
         {
             transform.ScaleX = scale;
             transform.ScaleY = scale;
@@ -399,7 +407,23 @@ public sealed partial class MainWindow : Window
             scale.ScaleY = 1;
             tile.Opacity = 1;
         }
+
+        if (args.ItemContainer.GetValue(TilePointerHandlersAttachedProperty) is not true)
+        {
+            args.ItemContainer.PointerEntered += AppContainer_PointerEntered;
+            args.ItemContainer.PointerExited += AppContainer_PointerExited;
+            args.ItemContainer.PointerPressed += AppContainer_PointerPressed;
+            args.ItemContainer.PointerReleased += AppContainer_PointerReleased;
+            args.ItemContainer.SetValue(TilePointerHandlersAttachedProperty, true);
+        }
     }
+
+    private static readonly DependencyProperty TilePointerHandlersAttachedProperty = DependencyProperty.RegisterAttached("TilePointerHandlersAttached", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
+
+    private void AppContainer_PointerEntered(object sender, PointerRoutedEventArgs e) => SetContainerTileScale(sender, TilePointerState.Entered);
+    private void AppContainer_PointerExited(object sender, PointerRoutedEventArgs e) => SetContainerTileScale(sender, TilePointerState.Exited);
+    private void AppContainer_PointerPressed(object sender, PointerRoutedEventArgs e) => SetContainerTileScale(sender, TilePointerState.Pressed);
+    private void AppContainer_PointerReleased(object sender, PointerRoutedEventArgs e) => SetContainerTileScale(sender, TilePointerState.Entered);
 
     private void ViewModel_AppsChanged(object? sender, EventArgs e)
     {
